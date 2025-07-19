@@ -1,12 +1,12 @@
 import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { LivroListaComponent } from './livro-lista/livro-lista.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.html',
+  standalone: true,
+  imports: [LivroListaComponent],
+  template: '<app-livro-lista></app-livro-lista>',
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('livros-angular');
 }
