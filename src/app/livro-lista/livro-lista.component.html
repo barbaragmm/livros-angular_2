@@ -1,6 +1,6 @@
 <main class="container my-4">
     <h1 class="mb-4">Catálogo de Livros</h1>
-    <table class="table table-striped align-middle">
+    <table class="table table-striped">
         <thead class="table-dark">
             <tr>
                 <th scope="col" style="width: 20%;">Título</th>
@@ -11,7 +11,7 @@
         </thead>
         <tbody>
             <tr *ngFor="let livro of livros">
-                <td>
+                <td class="align-top">
                     <p class="mb-2">{{ livro.titulo }}</p>
                     <button class="btn btn-danger btn-sm" (click)="excluir(livro.codigo)">
                         Excluir

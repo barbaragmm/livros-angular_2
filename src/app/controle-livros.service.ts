@@ -19,7 +19,15 @@ export class ControleLivrosService {
 
   incluir(livro: Livro): void {
     const maiorCodigo = this.livros.length > 0 ? Math.max(...this.livros.map(l => l.codigo)) : 0;
-    livro.codigo = maiorCodigo + 1;
+    
+    const novoLivro = new Livro(
+        maiorCodigo + 1,
+        livro.codEditora,
+        livro.titulo,
+        livro.resumo,
+        livro.autores
+    );
+
     this.livros.push(livro);
   }
 

@@ -18,7 +18,7 @@ export class ControleEditoraService {
   }
 
   getNomeEditora(codEditora: number): string {
-    const resultado = this.editoras.filter(e => e.codEditora === codEditora);
+    const resultado = this.editoras.filter(e => e.codEditora == codEditora);
     return resultado[0].nome;
   }
 }
