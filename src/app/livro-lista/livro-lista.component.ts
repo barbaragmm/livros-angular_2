@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './livro-lista.component.html',
-  styleUrl: './livro-lista.component.css'
+  styleUrls: ['./livro-lista.component.css']
 })
 export class LivroListaComponent implements OnInit {
   public editoras: Array<Editora> = [];
@@ -22,13 +22,17 @@ export class LivroListaComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.editoras = this.servEditora.getEditoras();
-    this.livros = this.servLivros.obterLivros();
+    this.servLivros.obterLivros().then(livrosRecebidos => {
+      this.livros = livrosRecebidos;
+    });
   }
 
-  excluir = (codigo: number): void => {
-    this.servLivros.excluir(codigo);
-    this.livros = this.servLivros.obterLivros();
+  excluir = (codigo: string): void => {
+    this.servLivros.excluir(codigo).then(() => {
+      this.servLivros.obterLivros().then(livrosRecebidos => {
+        this.livros = livrosRecebidos;
+      });
+    });
   }
 
   obterNome = (codEditora: number): string => {

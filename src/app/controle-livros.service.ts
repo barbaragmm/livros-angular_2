@@ -1,38 +1,56 @@
 import { Injectable } from '@angular/core';
 import { Livro } from './livro';
 
+const baseURL = "http://localhost:3030/livros";
+
+interface LivroMongo {
+  _id: string | null;
+  codEditora: number;
+  titulo: string;
+  resumo: string;
+  autores: string[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class ControleLivrosService {
-  livros: Array<Livro> = [
-    new Livro(1, 1, 'Angular para Iniciantes', 'Um guia completo para iniciantes em Angular.', ['João Silva']),
-    new Livro(2, 2, 'Avançando com Angular', 'Técnicas avançadas para desenvolvedores experientes.', ['Maria Oliveira']),
-    new Livro(3, 3, 'Angular e TypeScript', 'Integração entre Angular e TypeScript.', ['Carlos Souza']),
-    new Livro(4, 4, 'Use a Cabeça: Java', 'Use a Cabeça! Java é uma experiência completa de aprendizado em programação orientada a objetos (OO) e Java.', ['Bert Bates', 'Kathy Sierra']),
-    new Livro(5, 5, 'Java, como Programar', 'Milhões de alunos e profissionais aprenderam programação e desenvolvimento de software com os livros Deitel', ['Paul Deitel', 'Harvey Deitel'])
-  ];
+  constructor() { }
 
-  obterLivros(): Array<Livro> {
-    return this.livros;
-  }
-
-  incluir(livro: Livro): void {
-    const maiorCodigo = this.livros.length > 0 ? Math.max(...this.livros.map(l => l.codigo)) : 0;
-    
-    const novoLivro = new Livro(
-        maiorCodigo + 1,
-        livro.codEditora,
-        livro.titulo,
-        livro.resumo,
-        livro.autores
+  async obterLivros(): Promise<Livro[]> {
+    const resposta = await fetch(baseURL, { method: 'GET' });
+    const livrosMongo: LivroMongo[] = await resposta.json();
+    return livrosMongo.map(livroMongo => 
+      new Livro(
+        livroMongo._id!,
+        livroMongo.codEditora,
+        livroMongo.titulo,
+        livroMongo.resumo,
+        livroMongo.autores
+      )
     );
-
-    this.livros.push(livro);
   }
 
-  excluir(codigo: number): void {
-    const indice = this.livros.findIndex(livro => livro.codigo === codigo);
-    this.livros.splice(indice, 1);
+  async incluir(livro: Livro): Promise<boolean> {
+    const livroMongo: Omit<LivroMongo, '_id'> = {
+      codEditora: livro.codEditora,
+      titulo: livro.titulo,
+      resumo: livro.resumo,
+      autores: livro.autores,
+    };
+
+    const resposta = await fetch(baseURL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(livroMongo)
+    });
+    return resposta.ok;
+  }
+
+  async excluir(codigo: string): Promise<boolean> {
+    const resposta = await fetch(`${baseURL}/${codigo}`, { method: 'DELETE' });
+    return resposta.ok;
   }
 }

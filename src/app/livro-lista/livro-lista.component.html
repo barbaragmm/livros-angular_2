@@ -13,7 +13,7 @@
             <tr *ngFor="let livro of livros">
                 <td class="align-top">
                     <p class="mb-2">{{ livro.titulo }}</p>
-                    <button class="btn btn-danger btn-sm" (click)="excluir(livro.codigo)">
+                    <button class="btn btn-danger btn-sm" (click)="excluir(livro._id!)">
                         Excluir
                     </button>
                 </td>

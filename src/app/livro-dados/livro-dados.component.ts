@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
   styleUrl: './livro-dados.component.css'
 })
 export class LivroDadosComponent implements OnInit {
-  public livro: Livro = new Livro(0, 0, '', '', []);
+  public livro: Livro = new Livro('', 0, '', '', []);
   public autoresForm: string = '';
   public editoras: Array<Editora> = [];
 
@@ -31,7 +31,8 @@ export class LivroDadosComponent implements OnInit {
 
   incluir = (): void => {
     this.livro.autores = this.autoresForm.split('\n').filter(autor => autor.trim() !== '');
-    this.servLivros.incluir(this.livro);
-    this.router.navigateByUrl('/lista');
+    this.servLivros.incluir(this.livro).then(() => {
+      this.router.navigateByUrl('/lista');
+    });
   }
 }
